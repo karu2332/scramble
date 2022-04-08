@@ -25,6 +25,7 @@ main {
     display: flex;
     height: 100vh;
     overflow: hidden;
+    justify-content: center;
 
     /* prevent context menu (long touch) */
     touch-action: none;
@@ -39,8 +40,21 @@ main {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+.title {
+  font-size: 2em;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#start {
+  margin-top: 2em;
+}
+
 #connecting {
   align-self: center;
-  margin: auto;
   font-family: Arial, sans-serif;
 }
