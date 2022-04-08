@@ -41,7 +41,11 @@ main {
 }
 
 .title {
-  font-size: 2em;
+  font-family: synthemesc,sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 4em;
+  color: darkorange;
 }
 
 .center {
@@ -50,8 +54,43 @@ main {
   flex-direction: column;
 }
 
+#instructions {
+  background-color: #0F52BA;
+  border: none;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 50px;
+  border: 2px solid black;
+  transition-duration: 0.4s;
+}
+
+#instructions:hover {
+  background-color: darkblue;
+  color: white;
+}
+
 #start {
   margin-top: 2em;
+  background-color: #158415;
+  border: none;
+  color: white;
+  padding: 20px 30px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 50px;
+  border: 2px solid black;
+    transition-duration: 0.4s;
+}
+
+#start:hover {
+  background-color: darkgreen;
+  color: white;
 }
 
 #connecting {
