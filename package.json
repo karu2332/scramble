@@ -1,0 +1,24 @@
+{
+  "name": "scramble",
+  "version": "1.0.0",
+  "description": "final creative web project using node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/karu2332/scramble.git"
+  },
+  "author": "Katie Rudoff",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/karu2332/scramble/issues"
+  },
+  "homepage": "https://github.com/karu2332/scramble#readme",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "socket.io": "^4.4.1"
+  }
+}
