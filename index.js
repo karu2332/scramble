@@ -6,6 +6,10 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
+// game state
+let gamePlayers = {};
+let gameRound = 1;
+
 app.use('/css', express.static(__dirname + '/static/css'));
 
 app.use('/js', express.static(__dirname + '/static/js'));
@@ -16,6 +20,7 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/static/index.html');
 });
 
+// handles connection from browsers
 io.on('connection', (socket) => {
   console.log('got a new connection!');
 
@@ -25,6 +30,32 @@ io.on('connection', (socket) => {
   socket.on('start', (msg) => {
     console.log('event: start');
     sendMain(socket, 'username');
+  });
+  socket.on('username', (name) => {
+    console.log(`event: username: ${name}`);
+    gamePlayers[socket.id] = name;
+    sendMain(socket, 'players');
+    // broadcast the updated list of players
+    io.emit('players', Object.values(gamePlayers));
+    io.emit('round', gameRound);
+  });
+  // handles disconnects
+  socket.on('disconnect', () => {
+    const name = gamePlayers[socket.id];
+    console.log(`user disconnect: ${name}`);
+    delete(gamePlayers[socket.id]);
+    // broadcast the updated list of players
+    io.emit('players', Object.values(gamePlayers));
+  });
+  socket.on('ready', (round) => {
+    console.log(`event: ready round: ${round}`);
+    if (round < gameRound) {
+      // duplicate click from previous round - ignore
+      return;
+    }
+    // this round has started, gameRound reflects the next round
+    gameRound++;
+    sendMain(io, 'game');
   });
 });
 

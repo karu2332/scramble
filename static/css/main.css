@@ -97,3 +97,13 @@ main {
   align-self: center;
   font-family: Arial, sans-serif;
 }
+
+#players {
+  display: flex;
+  flex-wrap: wrap;
+  width: 80%;
+}
+
+.player-name {
+  flex-grow: 1;
+}
