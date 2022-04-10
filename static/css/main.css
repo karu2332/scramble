@@ -2,16 +2,15 @@
  * main css for Scramble
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
-
 html {
     overflow: hidden;
 }
 body {
     background-color: lightyellow;
     margin: 0;
-    font-family: 'Gloria Hallelujah', cursive;
+    font-family: marigny,sans-serif;
+    font-weight: 500;
+    font-style: normal;
 }
 
 /* images expand to fit the width/height of the container */
@@ -40,6 +39,18 @@ main {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+h2 {
+  font-family: synthemesc,sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 4em;
+  color: darkorange;
+}
+
+h3 {
+  font-size: 2em;
+}
+
 .title {
   font-family: synthemesc,sans-serif;
   font-weight: 400;
@@ -54,10 +65,27 @@ main {
   flex-direction: column;
 }
 
+.player-name {
+  flex-grow: 1;
+}
+
+.game-content {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+}
+
+.time-remaining {
+  font-family: monospace;
+  font-size: 1.5em;
+  margin-top: 10px;
+}
+
 #instructions {
-  background-color: #0F52BA;
+  background-color: #87CEEB;
   border: none;
-  color: white;
+  color: black;
   padding: 10px;
   text-align: center;
   text-decoration: none;
@@ -66,18 +94,21 @@ main {
   border-radius: 50px;
   border: 2px solid black;
   transition-duration: 0.4s;
+  font-family: marigny,sans-serif;
+  font-weight: 500;
+  font-style: normal;
 }
 
 #instructions:hover {
-  background-color: darkblue;
+  background-color: #4169E1;
   color: white;
 }
 
 #start {
   margin-top: 2em;
-  background-color: #158415;
+  background-color: #4CBB17;
   border: none;
-  color: white;
+  color: black;
   padding: 20px 30px;
   text-align: center;
   text-decoration: none;
@@ -85,11 +116,14 @@ main {
   font-size: 16px;
   border-radius: 50px;
   border: 2px solid black;
-    transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  font-family: marigny,sans-serif;
+  font-weight: 500;
+  font-style: normal;
 }
 
 #start:hover {
-  background-color: darkgreen;
+  background-color: #228B22;
   color: white;
 }
 
@@ -98,12 +132,59 @@ main {
   font-family: Arial, sans-serif;
 }
 
+#name {
+  margin-top: 300px;
+}
+
 #players {
   display: flex;
   flex-wrap: wrap;
   width: 80%;
 }
 
-.player-name {
-  flex-grow: 1;
+#ready {
+  margin-top: 15px;
+  background-color: #4CBB17;
+  border: none;
+  color: black;
+  padding: 20px 30px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 50px;
+  border: 2px solid black;
+  transition-duration: 0.4s;
+  font-family: marigny,sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  box-shadow: 0 10px 20px -8px rgba(0, 0, 0,.7);
+}
+
+#ready:active {
+  background-color: #228B22;
+  -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+     -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+          box-shadow: inset 0px 0px 5px #c1c1c1;
+   outline: none;
+}
+
+#words-found {
+  width: 80%;
+  max-width: 50em;
+  height: 10em;
+  background-color: #87CEEB;
+  border-radius: 25px;
+  border: 2px solid black;
+  overflow-y: scroll;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+#game-feedback {
+  width: 80%;
+  height: 1.5em;
+  text-align: center;
+  color: red;
+  margin-top: 20px;
 }

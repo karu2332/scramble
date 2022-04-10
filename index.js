@@ -1,3 +1,4 @@
+const fs = require('fs');
 const ejs = require('ejs');
 const express = require('express');
 const app = express();
@@ -9,6 +10,10 @@ const io = new Server(server);
 // game state
 let gamePlayers = {};
 let gameRound = 1;
+let gameLetters = [];
+let gameWordChoices = [];
+
+loadWordChoices();
 
 app.use('/css', express.static(__dirname + '/static/css'));
 
@@ -18,6 +23,10 @@ app.use('/img', express.static(__dirname + '/static/img'));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/static/index.html');
+});
+
+app.get('/dict.txt', (req, res) => {
+  res.sendFile(__dirname + '/static/dict.txt');
 });
 
 // handles connection from browsers
@@ -56,6 +65,13 @@ io.on('connection', (socket) => {
     // this round has started, gameRound reflects the next round
     gameRound++;
     sendMain(io, 'game');
+    // pick letters for this round
+    gameLetters = chooseLetters();
+    // broadcast all letters to players
+    io.emit('letters', gameLetters);
+  });
+  socket.on('total', (points) => {
+    console.log(`event: total points: ${points}`);
   });
 });
 
@@ -71,4 +87,25 @@ server.listen(3000, () => {
         socket.emit('main', str);
       }
     });
+  }
+
+  function loadWordChoices() {
+    try {
+      const data = fs.readFileSync('seven.txt', 'utf8');
+      gameWordChoices = data.trim().split('\n');
+      console.log(`${gameWordChoices.length} word choices`);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function chooseLetters() {
+    const word = gameWordChoices[Math.floor(Math.random() * gameWordChoices.length)];
+    console.log(`chose word: ${word}`);
+    let letters = [];
+    for (const c of word) {
+      letters.push(c);
+    }
+    letters.sort();
+    return letters;
   }

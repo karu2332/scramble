@@ -2,8 +2,32 @@ var socket = io();
 
 const $main = document.getElementsByTagName('main')[0];
 
+// dictionary of valid words
+let dict = {};
+
+// load in the dictionary
+fetch('dict.txt')
+  .then(r => r.text())
+  .then(data => {
+    data.trim().split('\n').forEach(function(word) {
+      dict[word] = 1;
+    });
+    console.log(`${Object.keys(dict).length} words loaded`);
+  });
+
+const pointsByLength = {
+  3: 2,
+  4: 3,
+  5: 5,
+  6: 10,
+  7: 15
+};
+
 // game state
 let gameRound = 0;
+let gameClock = 0;
+let gameWordsFound = {};
+let gameTotalPoints = 0;
 
 // we have defined an event main that replaces the html in <main>...</main>
 socket.on('main', function(html) {
@@ -35,6 +59,42 @@ socket.on('round', function(round) {
   }
 });
 
+// provides letters for the round
+socket.on('letters', function(letters) {
+  console.log(`event: letters: ${letters}`);
+  // update the game page to start round
+
+  // create the inputSeven widget
+  inputSeven('game-input', letters, (word) => {
+    if (word != "") {
+      wordEntered(word);
+    }
+  });
+  // start game clock
+  gameClock = 30;
+  setTimeout(clockTick, 1000);
+});
+
+function pad(t) {
+  if (t < 10) {
+    return '0' + t;
+  } else {
+    return t;
+  }
+}
+
+function clockTick() {
+  const $clock = document.getElementById('clock');
+  gameClock--;
+  $clock.innerHTML = `:${pad(gameClock)}`;
+  if (gameClock > 0) {
+      setTimeout(clockTick, 1000);
+  } else {
+    // timer expired
+    socket.emit('total', gameTotalPoints);
+  }
+}
+
 // after the main html has been replaced, add any remaining event listeners that apply
 function addListeners() {
   // listen for clicks on the start button
@@ -62,3 +122,39 @@ function addListeners() {
     });
   }
 }
+
+// called when a word is guessed
+function wordEntered(word) {
+  console.log(`word entered: ${word}`);
+  if (word.length < 3) {
+    badWord('Word too short!');
+  } else if (gameWordsFound[word]) {
+    badWord('Word already found!');
+  } else if (dict[word]) {
+    gameWordsFound[word] = 1;
+    goodWord(word);
+  } else {
+    badWord('Word not found!');
+  }
+}
+
+// display message in 'game-feedback'
+function badWord(msg) {
+  const $feedback = document.getElementById('game-feedback');
+  $feedback.innerHTML = msg;
+}
+
+function goodWord(word) {
+  const $feedback = document.getElementById('game-feedback');
+  const $wordsFound = document.getElementById('words-found');
+  const points = pointsByLength[word.length];
+  $feedback.innerHTML = `${points} points!`;
+  gameTotalPoints += points;
+  $wordsFound.innerHTML = Object.keys(gameWordsFound).sort().join(' ');
+}
+
+// with lots of tapping on the input circle going on,
+// prevent double-tap-zoom.
+document.addEventListener('dblclick', function(event) {
+  event.preventDefault();
+}, { passive: false });

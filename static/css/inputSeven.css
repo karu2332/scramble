@@ -1,0 +1,43 @@
+/* SPDX-License-Identifier: MIT
+ *
+ * Copyright 2022, Andy Rudoff. All rights reserved.
+ *
+ * inputSeven.css -- styles for inputSeven
+ */
+
+/* the fixed-size element containing the inputSeven widget */
+.input-seven {
+    display: grid;
+    justify-content: center;
+    width: 200px;
+    min-width: 200px;
+    max-width: 200px;
+    height: 250px;
+    min-height: 250px;
+    max-height: 250px;
+}
+/* bottom canvas layer, containing the circle and letters */
+#input-seven-layer0 {
+    grid-area: 2 / 1;
+    justify-self: center;
+    z-index: 1;
+}
+/* top canvas layer, where the lines and circles are drawn */
+#input-seven-layer1 {
+    grid-area: 2 / 1;
+    justify-self: center;
+    z-index: 2;
+}
+/* element showing the word being input */
+#input-seven-word {
+    grid-area: 1 / 1;
+    font-size: 20pt;
+    width: 200px;
+    height: 1.5em;
+    padding-top: .6em;
+    margin-top: .1em;
+    background: rgba(200, 128, 255, 0.3);
+    border-radius: 25px;
+    text-align: center;
+    text-transform: uppercase;
+}
