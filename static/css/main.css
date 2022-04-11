@@ -82,6 +82,20 @@ h3 {
   margin-top: 10px;
 }
 
+.fade-away {
+  animation: fade 3s forwards;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10%);
+  }
+}
+
 #instructions {
   background-color: #87CEEB;
   border: none;
@@ -187,4 +201,18 @@ h3 {
   text-align: center;
   color: red;
   margin-top: 20px;
+}
+
+#time-expired {
+  opacity: 0;
+  font-family: synthemesc,sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: red;
+  font-size: 5em;
+  text-align: center;
+  transform: translate(-50%, -50%) rotate(-30deg);
+  position: absolute;
+  top: 50vh;
+  left: 50%
 }

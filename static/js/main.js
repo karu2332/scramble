@@ -91,7 +91,11 @@ function clockTick() {
       setTimeout(clockTick, 1000);
   } else {
     // timer expired
-    socket.emit('total', gameTotalPoints);
+    const $expired = document.getElementById('time-expired');
+    $expired.style.opacity = 1;
+    setTimeout(function() {
+      socket.emit('total', gameTotalPoints);
+    }, 2000);
   }
 }
 
@@ -147,10 +151,17 @@ function badWord(msg) {
 function goodWord(word) {
   const $feedback = document.getElementById('game-feedback');
   const $wordsFound = document.getElementById('words-found');
+  const $wordsFoundLabel = document.getElementById('words-found-label');
   const points = pointsByLength[word.length];
-  $feedback.innerHTML = `${points} points!`;
+  const nWords = Object.keys(gameWordsFound).length;
+  $feedback.innerHTML = `<span class="fade-away">${points} points!</span>`;
   gameTotalPoints += points;
   $wordsFound.innerHTML = Object.keys(gameWordsFound).sort().join(' ');
+  if (nWords === 1) {
+    $wordsFoundLabel.innerHTML = `1 word found (${gameTotalPoints} points)`;
+  } else {
+    $wordsFoundLabel.innerHTML = `${nWords} words found (${gameTotalPoints} points)`;
+  }
 }
 
 // with lots of tapping on the input circle going on,

@@ -72,6 +72,7 @@ io.on('connection', (socket) => {
   });
   socket.on('total', (points) => {
     console.log(`event: total points: ${points}`);
+    sendMain(socket, 'stats');
   });
 });
 
