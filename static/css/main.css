@@ -83,16 +83,22 @@ h3 {
 }
 
 .fade-away {
+  display: inline-block;
   animation: fade 3s forwards;
 }
 
 @keyframes fade {
   0% {
     opacity: 1;
+    transform: translateY(0);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(0);
   }
   100% {
     opacity: 0;
-    transform: translateY(-10%);
+    transform: translateY(-30vh);
   }
 }
 
