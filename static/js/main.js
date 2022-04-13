@@ -86,16 +86,22 @@ function pad(t) {
 function clockTick() {
   const $clock = document.getElementById('clock');
   gameClock--;
-  $clock.innerHTML = `:${pad(gameClock)}`;
-  if (gameClock > 0) {
+  if (gameClock >= 0) {
+      if (gameClock < 10) {
+          $clock.innerHTML = `<span class="low-time">:${pad(gameClock)}</span>`;
+      } else {
+          $clock.innerHTML = `:${pad(gameClock)}`;
+      }
       setTimeout(clockTick, 1000);
   } else {
     // timer expired
-    const $expired = document.getElementById('time-expired');
-    $expired.style.opacity = 1;
+    const $expired = document.createElement('div');
+    $expired.classList.add('time-expired');
+    $expired.innerHTML= `Time&nbsp;Expired!`;
+    $main.appendChild($expired);
     setTimeout(function() {
       socket.emit('total', gameTotalPoints);
-    }, 2000);
+    }, 3000);
   }
 }
 

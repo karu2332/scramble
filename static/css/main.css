@@ -82,23 +82,38 @@ h3 {
   margin-top: 10px;
 }
 
-.fade-away {
+.low-time {
   display: inline-block;
+  color: red;
+  animation-name: bounce;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(.1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+
+.fade-away {
   animation: fade 3s forwards;
 }
 
 @keyframes fade {
   0% {
     opacity: 1;
-    transform: translateY(0);
-  }
-  20% {
-    opacity: 1;
-    transform: translateY(0);
   }
   100% {
     opacity: 0;
-    transform: translateY(-30vh);
+    transform: translateY(-10%);
   }
 }
 
@@ -160,6 +175,7 @@ h3 {
   display: flex;
   flex-wrap: wrap;
   width: 80%;
+  margin-bottom: 1em;
 }
 
 #ready {
@@ -196,7 +212,7 @@ h3 {
   background-color: #87CEEB;
   border-radius: 25px;
   border: 2px solid black;
-  overflow-y: scroll;
+  overflow-y: auto;
   text-transform: uppercase;
   text-align: center;
 }
@@ -209,16 +225,58 @@ h3 {
   margin-top: 20px;
 }
 
-#time-expired {
-  opacity: 0;
+.time-expired {
   font-family: synthemesc,sans-serif;
   font-weight: 400;
   font-style: normal;
   color: red;
   font-size: 5em;
   text-align: center;
-  transform: translate(-50%, -50%) rotate(-30deg);
   position: absolute;
   top: 50vh;
-  left: 50%
+  left: 50%;
+  z-index: 100;
+  animation-name: headline;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes headline {
+  0% {
+      transform: translate(-50%, -50%) scale(.1);
+      animation-timing-function: ease-in;
+  }
+  30% {
+      transform: translate(-50%, -50%) scale(.4) rotate(-130deg);
+      animation-timing-function: linear;
+  }
+  60% {
+      transform: translate(-50%, -50%) scale(.8) rotate(-260deg);
+      animation-timing-function: linear;
+  }
+  90% {
+      transform: translate(-50%, -50%) scale(1.2) rotate(-390deg);
+      animation-timing-function: ease-out;
+  }
+  100% {
+      transform: translate(-50%, -50%) scale(1) rotate(-390deg);
+      animation-timing-function: linear;
+  }
+}
+
+/* for screens not very wide... */
+@media (max-width: 400px) {
+  .time-expired {
+    font-size: 2.5em;
+  }
+}
+/* for screens not very tall */
+@media (max-height: 700px) {
+  #words-found {
+    height: 2.5em;
+    font-size: .7em;
+  }
+  main {
+    height: 85vh;
+  }
 }
