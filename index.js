@@ -85,6 +85,7 @@ io.on('connection', (socket) => {
       sendMain(socket, 'stats', { round: results.round });
       // broadcast to everyone the updated scores
       io.emit('scores', scoreTbody(results.round));
+      io.emit('round', gameRound);
     }
   });
 });

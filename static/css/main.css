@@ -329,6 +329,12 @@ h3 {
   margin-top: 20px;
 }
 
+#summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .time-expired {
   font-family: synthemesc,sans-serif;
   font-weight: 400;

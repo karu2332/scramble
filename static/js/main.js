@@ -146,9 +146,20 @@ function addSummary() {
     const nWords = Object.keys(gameWordsFound).length;
     const allWords = findAllWords(gameLetters);
     const nPossible = allWords.length;
-    let html = `You found ${nWords} words out of ${nPossible} possible.`;
+    let html = `<p>You found ${nWords} out of ${nPossible} <a class="possible-words" href="#">possible words</a>.</p>`;
+    const possiblePoints = calculatePoints(allWords);
+    html += `<p>You scored ${gameRoundPoints} out of ${possiblePoints} possible points.</p>`;
     $summary.innerHTML = html;
   }
+}
+
+// calculates total possible points
+function calculatePoints(words) {
+  let total = 0;
+  for (const word of words) {
+    total += pointsByLength[word.length];
+  }
+  return total;
 }
 
 // called when a word is guessed
