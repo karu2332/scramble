@@ -61,6 +61,13 @@ io.on('connection', (socket) => {
     delete(gamePlayers[socket.id]);
     // broadcast the updated list of players
     io.emit('players', Object.values(gamePlayers));
+    // if all players have disconnected, reset game
+    if (Object.keys(gamePlayers).length === 0) {
+      gamePlayers = {};
+      gameRound = 1;
+      gameLetters = [];
+      gameScores = {};
+    }
   });
   socket.on('ready', (round) => {
     console.log(`event: ready round: ${round}`);
