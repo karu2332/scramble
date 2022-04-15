@@ -26,6 +26,10 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/static/index.html');
 });
 
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(__dirname + '/favicon.ico');
+});
+
 app.get('/dict.txt', (req, res) => {
   res.sendFile(__dirname + '/static/dict.txt');
 });
