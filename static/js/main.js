@@ -113,6 +113,29 @@ function clockTick() {
 
 // after the main html has been replaced, add any remaining event listeners that apply
 function addListeners() {
+  // Get the button that opens the modal
+  const $modalButton = document.getElementsByClassName('modal-button')[0];
+  if ($modalButton) {
+    // Get the modal
+    const $modal = document.getElementById('my-modal');
+    $modalButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      $modal.style.display = 'block';
+    });
+    // Get the <span> element that closes the modal
+    var $close = document.getElementsByClassName('close')[0];
+    $close.addEventListener('click', (e) => {
+      e.preventDefault();
+      $modal.style.display = 'none';
+    });
+    $modal.addEventListener('click', (e) => {
+      if (e.target === $modal) {
+        e.preventDefault();
+        $modal.style.display = 'none';
+      }
+    });
+  }
+
   // listen for clicks on the start button
   const $start = document.getElementById('start');
   if ($start) {
@@ -146,10 +169,21 @@ function addSummary() {
     const nWords = Object.keys(gameWordsFound).length;
     const allWords = findAllWords(gameLetters);
     const nPossible = allWords.length;
-    let html = `<p>You found ${nWords} out of ${nPossible} <a class="possible-words" href="#">possible words</a>.</p>`;
+    let html = `<p>You found ${nWords} out of ${nPossible} <a class="modal-button" id="possible" href="#">possible words</a>.</p>`;
     const possiblePoints = calculatePoints(allWords);
     html += `<p>You scored ${gameRoundPoints} out of ${possiblePoints} possible points.</p>`;
     $summary.innerHTML = html;
+    html = '';
+    for (const word of allWords) {
+      if (gameWordsFound[word]) {
+        html += `<mark>${word}</mark> `;
+      } else {
+        html += `<span>${word}</span> `;
+      }
+    }
+    const $modalBody = document.getElementsByClassName('modal-body')[0];
+    $modalBody.innerHTML = html;
+    addListeners();
   }
 }
 
