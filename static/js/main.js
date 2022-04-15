@@ -62,6 +62,8 @@ socket.on('letters', function(letters) {
   console.log(`event: letters: ${letters}`);
   // update the game page to start round
   gameLetters = letters;
+  gameWordsFound = {};
+  gameRoundPoints = 0;
   // create the inputSeven widget
   inputSeven('game-input', letters, (word) => {
     if (word != "") {
