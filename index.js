@@ -12,6 +12,7 @@ let gamePlayers = {};
 let gameRound = 1;
 let gameLetters = [];
 let gameWordChoices = [];
+let gameScores = {};
 
 loadWordChoices();
 
@@ -41,9 +42,14 @@ io.on('connection', (socket) => {
     sendMain(socket, 'username');
   });
   socket.on('username', (name) => {
+    // sanitize name
+    name = name.replace(/[^a-z0-9_!@#$^*()=+:.-]/ig, '_')
+      .replace(/_+/g, '_')
+      .replace(/(.{15}).*/, '$1');
     console.log(`event: username: ${name}`);
     gamePlayers[socket.id] = name;
-    sendMain(socket, 'players');
+    scoreAddPlayer(name);
+    sendMain(socket, 'players', {round: gameRound});
     // broadcast the updated list of players
     io.emit('players', Object.values(gamePlayers));
     io.emit('round', gameRound);
@@ -70,9 +76,16 @@ io.on('connection', (socket) => {
     // broadcast all letters to players
     io.emit('letters', gameLetters);
   });
-  socket.on('total', (points) => {
-    console.log(`event: total points: ${points}`);
-    sendMain(socket, 'stats');
+  socket.on('total', (results) => {
+    console.log(`event: total points: ${results.total} for round ${results.round}`);
+    const name = gamePlayers[socket.id];
+    if (name) {
+      scoreAddRound(name, results.round, results.total);
+      console.table(gameScores);
+      sendMain(socket, 'stats', { round: results.round });
+      // broadcast to everyone the updated scores
+      io.emit('scores', scoreTbody(results.round));
+    }
   });
 });
 
@@ -80,8 +93,8 @@ server.listen(3000, () => {
   console.log('listening on *:3000');
 });
 
-  function sendMain(socket, page) {
-    ejs.renderFile(`pages/${page}.ejs`, (err, str) => {
+  function sendMain(socket, page, data={}, options={}) {
+    ejs.renderFile(`pages/${page}.ejs`, data, options, (err, str) => {
       if (err) {
         console.log(`ejs error on ${page}: ${err}`);
       } else {
@@ -109,4 +122,75 @@ server.listen(3000, () => {
     }
     letters.sort();
     return letters;
+  }
+
+  function scoreAddPlayer(player) {
+      if (!gameScores[player]) {
+          gameScores[player] = [];
+      }
+  }
+
+  function scorePlayers() {
+      return Object.keys(gameScores);
+  }
+
+  function scoreAddRound(player, round, score) {
+      gameScores[player][round] = score;
+  }
+
+  function scoreGetRound(player, round) {
+      return gameScores[player][round];
+  }
+
+  function scoreGetTotal(player) {
+      let total = 0;
+      gameScores[player].forEach((score) => {
+          total += score;
+      });
+      return total;
+  }
+
+  function scoreTbody(round) {
+      let tbodyList = [];
+      let maxRound = 0;
+      let maxTotal = 0;
+      for (const player of scorePlayers()) {
+          const playerRound = scoreGetRound(player, round);
+          if (playerRound > maxRound) {
+              maxRound = playerRound;
+          }
+          const playerTotal = scoreGetTotal(player);
+          if (playerTotal > maxTotal) {
+              maxTotal = playerTotal;
+          }
+          tbodyList.push({
+              'name': player,
+              'round': playerRound,
+              'total': playerTotal,
+          });
+      }
+      tbodyList.sort((a, b) => {
+          return b.total - a.total;
+      });
+
+      let html = '';
+      for (const line of tbodyList) {
+          html += '<tr>';
+          html += `<td>${line.name}</td>`;
+          if (line.round === undefined) {
+            html += `<td>&hellip;</td>`;
+          } else if (line.round === maxRound) {
+              html += `<td><mark>${line.round}</mark></td>`;
+          } else {
+              html += `<td>${line.round}</td>`;
+          }
+          if (line.total === maxTotal) {
+              html += `<td><mark>${line.total}</mark></td>`;
+          } else {
+              html += `<td>${line.total}</td>`;
+          }
+          html += '</tr>';
+      }
+
+      return html;
   }

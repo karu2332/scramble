@@ -27,13 +27,15 @@ const pointsByLength = {
 let gameRound = 0;
 let gameClock = 0;
 let gameWordsFound = {};
-let gameTotalPoints = 0;
+let gameRoundPoints = 0;
+let gameLetters = [];
 
 // we have defined an event main that replaces the html in <main>...</main>
 socket.on('main', function(html) {
   console.log('event: main');
   $main.innerHTML = html;
   addListeners();
+  addSummary();
 });
 
 // this updates the current list of players
@@ -53,17 +55,13 @@ socket.on('players', function(players) {
 socket.on('round', function(round) {
   console.log(`event: round: ${round}`);
   gameRound = round;
-  const $round = document.getElementById('round');
-  if ($round) {
-    $round.innerHTML = round;
-  }
 });
 
 // provides letters for the round
 socket.on('letters', function(letters) {
   console.log(`event: letters: ${letters}`);
   // update the game page to start round
-
+  gameLetters = letters;
   // create the inputSeven widget
   inputSeven('game-input', letters, (word) => {
     if (word != "") {
@@ -73,6 +71,14 @@ socket.on('letters', function(letters) {
   // start game clock
   gameClock = 30;
   setTimeout(clockTick, 1000);
+});
+
+socket.on('scores', function(html) {
+  console.log('event: scores');
+  const $tbody = document.getElementById('scores-tbody');
+  if ($tbody) {
+    $tbody.innerHTML = html;
+  }
 });
 
 function pad(t) {
@@ -100,7 +106,7 @@ function clockTick() {
     $expired.innerHTML= `Time&nbsp;Expired!`;
     $main.appendChild($expired);
     setTimeout(function() {
-      socket.emit('total', gameTotalPoints);
+      socket.emit('total', { round: gameRound, total: gameRoundPoints});
     }, 3000);
   }
 }
@@ -133,6 +139,18 @@ function addListeners() {
   }
 }
 
+// fill in summary section if it exists
+function addSummary() {
+  const $summary = document.getElementById('summary');
+  if ($summary) {
+    const nWords = Object.keys(gameWordsFound).length;
+    const allWords = findAllWords(gameLetters);
+    const nPossible = allWords.length;
+    let html = `You found ${nWords} words out of ${nPossible} possible.`;
+    $summary.innerHTML = html;
+  }
+}
+
 // called when a word is guessed
 function wordEntered(word) {
   console.log(`word entered: ${word}`);
@@ -151,7 +169,7 @@ function wordEntered(word) {
 // display message in 'game-feedback'
 function badWord(msg) {
   const $feedback = document.getElementById('game-feedback');
-  $feedback.innerHTML = msg;
+  $feedback.innerHTML = `<span class="fade-away">${msg}</span>`;
 }
 
 function goodWord(word) {
@@ -160,14 +178,54 @@ function goodWord(word) {
   const $wordsFoundLabel = document.getElementById('words-found-label');
   const points = pointsByLength[word.length];
   const nWords = Object.keys(gameWordsFound).length;
-  $feedback.innerHTML = `<span class="fade-away">${points} points!</span>`;
-  gameTotalPoints += points;
-  $wordsFound.innerHTML = Object.keys(gameWordsFound).sort().join(' ');
+  $feedback.innerHTML = `<span class="fly-away">${points} points!</span>`;
+  gameRoundPoints += points;
+  const $word = document.createElement('div');
+  $word.innerHTML = word;
+  $wordsFound.appendChild($word);
   if (nWords === 1) {
-    $wordsFoundLabel.innerHTML = `1 word found (${gameTotalPoints} points)`;
+    $wordsFoundLabel.innerHTML = `1 word found (${gameRoundPoints} points)`;
   } else {
-    $wordsFoundLabel.innerHTML = `${nWords} words found (${gameTotalPoints} points)`;
+    $wordsFoundLabel.innerHTML = `${nWords} words found (${gameRoundPoints} points)`;
   }
+}
+
+// find all words length 3-7 in dict using given letters
+function findAllWords(letters) {
+  let found = {};
+
+  // helper function to recursively check combinations
+  const tryAll = function(chars, maxLen, prefix) {
+    if (maxLen === 0) {
+      // end of recursion, reached max length
+      if (dict[prefix]) {
+        // combination is a valid word
+        found[prefix] = 1;
+      }
+      return;
+    }
+
+    // for each possible character in chars
+    for (let i = 0; i < chars.length; i++) {
+      // fill in the slot with this character
+      const word = prefix + chars[i];
+      // remove it from the set of available characters
+      var newChars = [...chars];
+      newChars.splice(i, 1);
+      // recursive call to select next character
+      tryAll(newChars, maxLen - 1, word);
+    }
+  }
+
+  // check all combinations length 3 through 7
+  for (let len = 3; len < 8; len++) {
+    tryAll(letters, len, '');
+  }
+
+  // sort by length and then alphabetically
+  return Object.keys(found).sort((a, b) => {
+    return a.length - b.length || a.localeCompare(b);
+  });
 }
 
 // with lots of tapping on the input circle going on,
