@@ -25,7 +25,7 @@ const pointsByLength = {
 
 // game state
 let gameRound = 0;
-let gameClock = 0;
+let gameClock = -1;
 let gameWordsFound = {};
 let gameRoundPoints = 0;
 let gameLetters = [];
@@ -70,8 +70,8 @@ socket.on('letters', function(letters) {
       wordEntered(word);
     }
   });
-  // start game clock
-  gameClock = 30;
+  // start game clock, add three for "ready, set go!"
+  gameClock = 33;
   setTimeout(clockTick, 1000);
 });
 
@@ -93,6 +93,9 @@ function pad(t) {
 
 function clockTick() {
   const $clock = document.getElementById('clock');
+  if (!$clock) {
+    return;
+  }
   gameClock--;
   if (gameClock >= 0) {
       if (gameClock < 10) {
@@ -109,28 +112,45 @@ function clockTick() {
     $main.appendChild($expired);
     setTimeout(function() {
       socket.emit('total', { round: gameRound, total: gameRoundPoints});
-    }, 3000);
+    }, 2500);
   }
 }
 
+// keep track of listeners and clear them before adding new listeners
+let allListeners = [];
+function doAddEventListener(target, type, listener) {
+  allListeners.push({
+    target: target,
+    type: type,
+    listener: listener
+  });
+  target.addEventListener(type, listener);
+}
 // after the main html has been replaced, add any remaining event listeners that apply
 function addListeners() {
+  // clear previous listeners
+  for (let i = 0; i < allListeners.length; i++) {
+    const entry = allListeners[i];
+    entry.target.removeEventListener(entry.type, entry.listener);
+  }
+  allListeners = [];
+
   // Get the button that opens the modal
   const $modalButton = document.getElementsByClassName('modal-button')[0];
   if ($modalButton) {
     // Get the modal
     const $modal = document.getElementById('my-modal');
-    $modalButton.addEventListener('click', (e) => {
+    doAddEventListener($modalButton, 'click', (e) => {
       e.preventDefault();
       $modal.style.display = 'block';
     });
     // Get the <span> element that closes the modal
     var $close = document.getElementsByClassName('close')[0];
-    $close.addEventListener('click', (e) => {
+    doAddEventListener($close, 'click', (e) => {
       e.preventDefault();
       $modal.style.display = 'none';
     });
-    $modal.addEventListener('click', (e) => {
+    doAddEventListener($modal, 'click', (e) => {
       if (e.target === $modal) {
         e.preventDefault();
         $modal.style.display = 'none';
@@ -141,7 +161,7 @@ function addListeners() {
   // listen for clicks on the start button
   const $start = document.getElementById('start');
   if ($start) {
-    $start.addEventListener('click', (e) => {
+    doAddEventListener($start, 'click', (e) => {
       e.preventDefault();
       socket.emit('start', '');
     });
@@ -149,7 +169,7 @@ function addListeners() {
   // listen for changes on the name input field
   const $name = document.getElementById('name');
   if ($name) {
-    $name.addEventListener('change', (e) => {
+    doAddEventListener($name, 'change', (e) => {
       e.preventDefault();
       socket.emit('username', $name.value);
     });
@@ -158,7 +178,7 @@ function addListeners() {
   // listen for clicks on the begin round button
   const $ready = document.getElementById('ready');
   if ($ready) {
-    $ready.addEventListener('click', (e) => {
+    doAddEventListener($ready, 'click', (e) => {
       e.preventDefault();
       socket.emit('ready', gameRound);
     });
