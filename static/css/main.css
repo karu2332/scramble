@@ -254,6 +254,7 @@ h3 {
   font-weight: 500;
   font-style: normal;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #instructions:hover {
@@ -278,6 +279,7 @@ h3 {
   font-weight: 500;
   font-style: normal;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #start:hover {
@@ -319,6 +321,7 @@ h3 {
   font-style: normal;
   box-shadow: 0 10px 20px -8px rgba(0, 0, 0,.7);
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #ready:active {
