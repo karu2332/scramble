@@ -9,10 +9,11 @@ const io = new Server(server);
 
 // game state
 let gamePlayers = {};
-let gameRound = 1;
+let gameRound = 0;
 let gameLetters = [];
 let gameWordChoices = [];
 let gameScores = {};
+let gameFirstPlayer = null;
 
 loadWordChoices();
 
@@ -51,12 +52,16 @@ io.on('connection', (socket) => {
       .replace(/_+/g, '_')
       .replace(/(.{15}).*/, '$1');
     console.log(`event: username: ${name}`);
+    if (Object.keys(gamePlayers).length === 0) {
+      // first player joined
+      gameFirstPlayer = name;
+    }
     gamePlayers[socket.id] = name;
     scoreAddPlayer(name);
-    sendMain(socket, 'players', {round: gameRound});
+    sendMain(socket, 'players', { nextRound: gameRound + 1, player: name, firstPlayer: gameFirstPlayer });
     // broadcast the updated list of players
     io.emit('players', Object.values(gamePlayers));
-    io.emit('round', gameRound);
+
   });
   // handles disconnects
   socket.on('disconnect', () => {
@@ -67,20 +72,19 @@ io.on('connection', (socket) => {
     io.emit('players', Object.values(gamePlayers));
     // if all players have disconnected, reset game
     if (Object.keys(gamePlayers).length === 0) {
+      console.log(`no players connected, reseting game state`);
       gamePlayers = {};
-      gameRound = 1;
+      gameRound = 0;
       gameLetters = [];
       gameScores = {};
+      gameFirstPlayer = null;
     }
   });
   socket.on('ready', (round) => {
     console.log(`event: ready round: ${round}`);
-    if (round < gameRound) {
-      // duplicate click from previous round - ignore
-      return;
-    }
-    // this round has started, gameRound reflects the next round
+    // start next round
     gameRound++;
+    io.emit('round', gameRound);
     sendMain(io, 'game');
     // pick letters for this round
     gameLetters = chooseLetters();
@@ -93,10 +97,10 @@ io.on('connection', (socket) => {
     if (name) {
       scoreAddRound(name, results.round, results.total);
       console.table(gameScores);
-      sendMain(socket, 'stats', { round: results.round });
+      sendMain(socket, 'stats', { lastRound: results.round, player: name, firstPlayer: gameFirstPlayer});
       // broadcast to everyone the updated scores
       io.emit('scores', scoreTbody(results.round));
-      io.emit('round', gameRound);
+
     }
   });
 });

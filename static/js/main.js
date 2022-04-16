@@ -153,6 +153,7 @@ function addListeners() {
       e.preventDefault();
       socket.emit('username', $name.value);
     });
+    $name.focus();
   }
   // listen for clicks on the begin round button
   const $ready = document.getElementById('ready');

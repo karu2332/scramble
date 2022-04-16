@@ -218,6 +218,26 @@ h3 {
   background-color: #dfdfdf;
 }
 
+.waiting {
+  margin-top: 2em;
+}
+
+/* https://stackoverflow.com/questions/13014808/is-there-anyway-to-animate-an-ellipsis-with-css-animations */
+.waiting::after {
+  display: inline-block;
+  animation: dotty steps(1,end) 1s infinite;
+  content: '';
+  width: 3em;
+}
+
+@keyframes dotty {
+  0%   { content: ''; }
+  25%  { content: '.'; }
+  50%  { content: '..'; }
+  75%  { content: '...'; }
+  100% { content: ''; }
+}
+
 #instructions {
   background-color: #87CEEB;
   border: none;
@@ -356,6 +376,12 @@ h3 {
   animation-name: headline;
   animation-duration: 1s;
   animation-fill-mode: forwards;
+}
+
+/* prevent outlines around buttons when clicked */
+/* https://stackoverflow.com/questions/19886843/how-to-remove-outline-border-from-input-button */
+*:focus {
+    outline: 0 !important;
 }
 
 @keyframes headline {

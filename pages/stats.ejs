@@ -1,18 +1,22 @@
 <section class="stats-content">
-  <h2>Round <%= round %> Results</h2>
+  <h2>Round <%= lastRound %> Results</h2>
   <div id="summary"></div>
   <div class="scores">
     <table>
       <thead>
               <tr>
-                      <th>User</th><th>Round <%= round %></th><th>Total</th>
+                      <th>User</th><th>Round <%= lastRound %></th><th>Total</th>
               </tr>
       </thead>
       <tbody id="scores-tbody">
       </tbody>
     </table>
   </div>
-  <button id="ready">Begin Round <%= round + 1 %></button>
+  <% if (player === firstPlayer) { %>
+    <button id="ready">Begin Round <%= lastRound + 1%></button>
+  <% } else { %>
+    <p class="waiting">Waiting for <%= firstPlayer %> to begin round <%= lastRound + 1 %></p>
+  <% } %>
 </section>
 <!-- The Modal -->
 <div id="my-modal" class="modal">

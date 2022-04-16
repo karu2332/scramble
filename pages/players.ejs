@@ -1,7 +1,11 @@
 <section>
-<h2>Round <%= round %></h2>
+<h2>Round <%= nextRound %></h2>
 <h3>Players</h3>
 <div id="players"></div>
-<p>When all players are connected, start the round by clicking the button below:</p>
-<button id="ready">Begin Round <%= round %></button>
+<p>Play begins when the first player determines everyone has joined.</p>
+<% if (player === firstPlayer) { %>
+  <button id="ready">Begin Round <%= nextRound %></button>
+<% } else { %>
+  <p class="waiting">Waiting for <%= firstPlayer %> to begin round <%= nextRound %></p>
+<% } %>
 </section>
