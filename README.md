@@ -1,6 +1,19 @@
-# Scramble
+## Table of Contents
+* [Scramble] (#general-info)
+* [Technologies] (#technologies)
+* [Setup] (#setup)
+
+## Scramble
 Scramble is a multi-player word game that utilizes various Node.js libraries,
 such as Express.js, SOCKET.IO, and EJS.
+
+## Technologies
+Project is created with:
+- Express.js
+- SOCKET.IO
+- EJS
+
+
 
 ## Node.js
 Node.js is an open-source, cross-platform, back-end JavaScript runtime
@@ -18,7 +31,7 @@ released as free and open-source software under the MIT License.
 ## SOCKET.IO
 SOCKET.IO is a library that enables low-latency, bidirectional
 and event-based communication between a client and a server. Below is a
-basic example with SOCKET.IO:
+basic example using SOCKET.IO:
 
 *Server*
 `import { Server } from "socket.io";
