@@ -17,9 +17,8 @@ released as free and open-source software under the MIT License.
 
 ## SOCKET.IO
 SOCKET.IO is a library that enables low-latency, bidirectional
-and event-based communication between a client and a server.
-
-Here is a basic example with SOCKET.IO:
+and event-based communication between a client and a server. Below is a
+basic example with SOCKET.IO:
 
 *Server*
 `import { Server } from "socket.io";
