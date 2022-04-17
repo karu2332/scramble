@@ -4,6 +4,7 @@ such as Express.js, SOCKET.IO, and EJS.
 
 ## Screenshots
 ![Sample Game](scramble.gif)
+![Sample Scores](scores.jpg)
 
 ### Node.js
 Node.js is an open-source, cross-platform, back-end JavaScript runtime
