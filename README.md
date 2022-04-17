@@ -26,7 +26,7 @@ over SOCKET.IO.
 ## Technologies - Client Side
 Project is created with:
 - Fonts from [Typekit](http://typekit.net/)
-- Moda Box: [W3 Schools](https://www.w3schools.com/howto/howto_css_modals.asp)
+- Modal Box: [W3 Schools](https://www.w3schools.com/howto/howto_css_modals.asp)
 - Animations: [Mdn Webdocs](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations)
 - Letter Input Widget: [InputSeven](https://github.com/andyrudoff/inputSeven)
 - Code to find all possible words adapted from [Words](http://rudoff.com/words/)
