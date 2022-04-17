@@ -1,5 +1,11 @@
 var socket = io();
 
+let clickEvent = 'click';
+// for mobile devices, switch to touchstart
+if ('ontouchstart' in document.documentElement) {
+  clickEvent = 'touchstart';
+}
+
 const $main = document.getElementsByTagName('main')[0];
 
 // dictionary of valid words
@@ -106,6 +112,7 @@ function clockTick() {
       setTimeout(clockTick, 1000);
   } else {
     // timer expired
+    inputSevenEnd();
     const $expired = document.createElement('div');
     $expired.classList.add('time-expired');
     $expired.innerHTML= `Time&nbsp;Expired!`;
@@ -140,17 +147,17 @@ function addListeners() {
   if ($modalButton) {
     // Get the modal
     const $modal = document.getElementById('my-modal');
-    doAddEventListener($modalButton, 'click', (e) => {
+    doAddEventListener($modalButton, clickEvent, (e) => {
       e.preventDefault();
       $modal.style.display = 'block';
     });
     // Get the <span> element that closes the modal
     var $close = document.getElementsByClassName('close')[0];
-    doAddEventListener($close, 'click', (e) => {
+    doAddEventListener($close, clickEvent, (e) => {
       e.preventDefault();
       $modal.style.display = 'none';
     });
-    doAddEventListener($modal, 'click', (e) => {
+    doAddEventListener($modal, clickEvent, (e) => {
       if (e.target === $modal) {
         e.preventDefault();
         $modal.style.display = 'none';
@@ -161,7 +168,7 @@ function addListeners() {
   // listen for clicks on the start button
   const $start = document.getElementById('start');
   if ($start) {
-    doAddEventListener($start, 'click', (e) => {
+    doAddEventListener($start, clickEvent, (e) => {
       e.preventDefault();
       socket.emit('start', '');
     });
@@ -178,7 +185,7 @@ function addListeners() {
   // listen for clicks on the begin round button
   const $ready = document.getElementById('ready');
   if ($ready) {
-    doAddEventListener($ready, 'click', (e) => {
+    doAddEventListener($ready, clickEvent, (e) => {
       e.preventDefault();
       socket.emit('ready', gameRound);
     });

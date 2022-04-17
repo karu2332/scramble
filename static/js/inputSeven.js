@@ -7,6 +7,26 @@
 
 "use strict";
 
+// keep track of listeners and clear them before adding new listeners
+let inputSevenListeners = [];
+function inputSevenAddEventListener(target, type, listener) {
+	inputSevenListeners.push({
+		target: target,
+		type: type,
+		listener: listener
+	});
+	target.addEventListener(type, listener);
+}
+
+// remove all listeners
+function inputSevenEnd() {
+  for (let i = 0; i < inputSevenListeners.length; i++) {
+    const entry = inputSevenListeners[i];
+    entry.target.removeEventListener(entry.type, entry.listener);
+  }
+  inputSevenListeners = [];
+}
+
 // inputSeven -- seven letter input widget
 //    id is the element in which to put thw widget (must class="input-seven")
 //    letters is an array of seven letters
@@ -220,21 +240,21 @@ function inputSeven(id, letters, onWord) {
     drawLetters(ctx0, radius, letters);
 
     // listen for mouse up
-    $layer1.addEventListener('pointerup', function(event) {
+    inputSevenAddEventListener($layer1, 'pointerup', function(event) {
         const xy = mouseXY(event);
         //console.log(`up ${xy.x} ${xy.y} word is "${wordSoFar}"`);
         endWord();
     });
 
     // listen for mouse out
-    $layer1.addEventListener('pointerout', function(event) {
+    inputSevenAddEventListener($layer1, 'pointerout', function(event) {
         const xy = mouseXY(event);
         //console.log(`out ${xy.x} ${xy.y}`);
         endWord();
     });
 
     // listen for mouse moves
-    $layer1.addEventListener('pointermove', function(event) {
+    inputSevenAddEventListener($layer1, 'pointermove', function(event) {
         if (down) {
             const xy = mouseXY(event);
             //console.log(`move ${xy.x} ${xy.y}`);
@@ -243,7 +263,7 @@ function inputSeven(id, letters, onWord) {
     });
 
     // listen for mouse down
-    $layer1.addEventListener('pointerdown', function(event) {
+    inputSevenAddEventListener($layer1, 'pointerdown', function(event) {
         resetWord();
         const xy = mouseXY(event);
         //console.log(`down ${xy.x} ${xy.y}`);
@@ -298,7 +318,7 @@ function inputSeven(id, letters, onWord) {
         keyboardInputCount = 0;
     };
 
-	document.addEventListener('keypress', function(event) {
+	inputSevenAddEventListener(document, 'keypress', function(event) {
         if (document.getElementById(id) === null) {
             return; // widget went away
         }
@@ -324,7 +344,7 @@ function inputSeven(id, letters, onWord) {
 	});
 
 	// left arrow and delete keys
-	document.addEventListener('keydown', function(event) {
+	inputSevenAddEventListener(document, 'keydown', function(event) {
         if (document.getElementById(id) === null) {
             return; // widget went away
         }
