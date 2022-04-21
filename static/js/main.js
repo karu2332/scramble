@@ -1,4 +1,9 @@
-var socket = io();
+let socket = io();
+const path = window.location.pathname;
+const room = path.replace(/.*\//, '');
+console.log(`room ${room}`);
+
+socket.emit('join', room);
 
 let clickEvent = 'click';
 // for mobile devices, switch to touchstart
@@ -57,6 +62,15 @@ socket.on('players', function(players) {
   }
 });
 
+// handles error message form duplicate username
+socket.on('error', function(html) {
+  console.log(`event: error: ${html}`);
+  const $error = document.getElementById('error');
+  if ($error) {
+    $error.innerHTML = html;
+  }
+});
+
 // updates the round number
 socket.on('round', function(round) {
   console.log(`event: round: ${round}`);
@@ -87,6 +101,11 @@ socket.on('scores', function(html) {
   if ($tbody) {
     $tbody.innerHTML = html;
   }
+});
+
+socket.on('disconnect', function() {
+  console.log(`disconnect`);
+  window.location.reload();
 });
 
 function pad(t) {
@@ -189,6 +208,12 @@ function addListeners() {
       e.preventDefault();
       socket.emit('ready', gameRound);
     });
+  }
+
+  // fill in the url if necessary
+  const $url = document.getElementById('url');
+  if ($url) {
+    $url.innerHTML = window.location.host + window.location.pathname;
   }
 }
 

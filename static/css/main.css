@@ -68,6 +68,7 @@ h4 {
   display: flex;
   justify-content: center;
   flex-direction: column;
+  align-items: center;
 }
 
 .player-name {
@@ -243,8 +244,18 @@ h4 {
   100% { content: ''; }
 }
 
+#error {
+  margin-top: 1em;
+  color: red;
+}
+
+#url {
+  font-family: Arial, sans-serif;
+}
+
 #instructions {
   background-color: #87CEEB;
+  width: 100%;
   border: none;
   color: black;
   padding: 10px;
@@ -270,6 +281,7 @@ h4 {
 
 #start {
   margin-top: 2em;
+  width: 100%;
   background-color: #4CBB17;
   border: none;
   color: black;
@@ -308,6 +320,16 @@ h4 {
   flex-wrap: wrap;
   width: 80%;
   margin-bottom: 1em;
+}
+
+#player-box {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  border: 1px solid black;
+  background-color: lightcyan;
 }
 
 #ready {

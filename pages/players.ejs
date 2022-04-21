@@ -1,7 +1,10 @@
-<section>
+<section class="center">
 <h2>Round <%= nextRound %></h2>
-<h3>Players</h3>
-<div id="players"></div>
+<h3 id="url"></h3>
+<div id="player-box">
+  <h3>Players</h3>
+  <div id="players"></div>
+</div>
 <p>Play begins when the first player determines everyone has joined.</p>
 <% if (player === firstPlayer) { %>
   <button id="ready">Begin Round <%= nextRound %></button>
