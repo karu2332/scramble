@@ -244,10 +244,10 @@ io.on('connection', (socket) => {
     const game = rooms[room];
     if (game) {
       game.removePlayer(name);
+      // broadcast the updated list of players
+      io.to(room).emit('players', game.allPlayers());
     }
     delete(socketInfo[socket.id]);
-    // broadcast the updated list of players
-    io.to(room).emit('players', game.allPlayers());
   });
   socket.on('ready', (round) => {
     if (!socketInfo[socket.id]) {

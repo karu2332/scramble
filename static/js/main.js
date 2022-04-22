@@ -91,7 +91,7 @@ socket.on('letters', function(letters) {
     }
   });
   // start game clock, add three for "ready, set go!"
-  gameClock = 33;
+  gameClock = 48;
   setTimeout(clockTick, 1000);
 });
 
