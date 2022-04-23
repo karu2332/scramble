@@ -210,6 +210,15 @@ function addListeners() {
     });
   }
 
+  // listen for clicks on the end game button
+  const $end = document.getElementById('end-game');
+  if ($end) {
+    doAddEventListener($end, clickEvent, (e) => {
+      e.preventDefault();
+      socket.emit('end', gameRound);
+    });
+  }
+
   // fill in the url if necessary
   const $url = document.getElementById('url');
   if ($url) {

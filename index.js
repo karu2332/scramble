@@ -274,6 +274,25 @@ io.on('connection', (socket) => {
     // broadcast all letters to players
     io.to(room).emit('letters', game.letters);
   });
+  socket.on('end', (round) => {
+    if (!socketInfo[socket.id]) {
+      // old left over socket
+      console.log(`end: disconnect`);
+      socket.disconnect();
+      return;
+    }
+    const { room, name } = socketInfo[socket.id];
+    const game = rooms[room];
+    if (!game) {
+      console.log(`end: no game`);
+      sendMain(socket, 'badroom');
+      return;
+    }
+    console.log(`event: end`);
+    // remove the room
+    delete(rooms[room]);
+    io.in(room).disconnectSockets();
+  });
   socket.on('total', (results) => {
     if (!socketInfo[socket.id]) {
       // old left over socket

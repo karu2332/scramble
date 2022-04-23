@@ -369,6 +369,36 @@ h4 {
    outline: none;
 }
 
+#end-game {
+  margin-top: 10px;
+  background-color: #E97451;
+  border: none;
+  color: black;
+  padding: 10px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 50px;
+  border: 2px solid black;
+  transition-duration: 0.4s;
+  font-family: marigny,sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  box-shadow: 0 10px 20px -8px rgba(0, 0, 0,.7);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+#end-game:active {
+  background-color: #CC5500;
+  -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+     -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+          box-shadow: inset 0px 0px 5px #c1c1c1;
+   outline: none;
+}
+
 #words-found {
   display: flex;
   flex-direction: column;
@@ -448,15 +478,22 @@ h4 {
 }
 
 /* for screens not very wide... */
-@media (max-width: 400px) {
+@media (max-width: 450px) {
   .time-expired {
     font-size: 2.5em;
+  }
+  h2 {
+    font-size: 2em;
+  }
+
+  #player-box {
+    width: 90%;
   }
 }
 /* for screens not very tall */
 @media (max-height: 700px) {
   #words-found {
-    height: 2.5em;
+    height: 3.5em;
     font-size: .7em;
   }
   main {
